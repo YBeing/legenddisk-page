@@ -2,24 +2,23 @@
   <div id="bk1">
     <div id="form1">
 
-      <span style="color: white;">账号</span><Input v-model="value14" placeholder="Account" clearable style="width: 200px" /><br><br>
-      <span style="color: white">密码</span><Input v-model="value18" type="password" password placeholder="password" style="width: 200px" />
+      <span style="color: white;">账号</span><Input v-model="username" placeholder="Account" clearable style="width: 200px" /><br><br>
+      <span style="color: white">密码</span><Input v-model="password" type="password" password placeholder="password" style="width: 200px" />
     </div>
     <div style="text-align: center">
       <br>
-      <Button type="default" ghost>登录</Button>&nbsp;
+      <Button type="default" ghost @click="login()">登录</Button>&nbsp;
       <Button type="default" ghost @click="modal12 = true">注册</Button>
     </div>
-    <Modal v-model="modal12" draggable scrollable ok-text="OK"
-           cancel-text="Cancel" width="360">
+    <Modal v-model="modal12" draggable scrollable  width="360" @on-ok="handleSubmit">
       <p slot="header" style="color:#f60;text-align:center">
         <Icon type="md-people"></Icon>
         <span>Registary account</span>
       </p>
       <div>
         <Form ref="formInline" :model="formInline" :rules="ruleInline" inline>
-          <FormItem prop="user">
-            <Input type="text" v-model="formInline.user" placeholder="Username">
+          <FormItem prop="username">
+            <Input type="text" v-model="formInline.username" placeholder="Username">
               <Icon type="ios-person-outline" slot="prepend"></Icon>
             </Input>
           </FormItem>
@@ -55,34 +54,77 @@
 
     data () {
       return {
-        value14: '',
-        value18: '',
+        username: '',
+        password: '',
         modal12: false,
         formInline: {
-          user: '',
+          username: '',
           password: ''
         },
         ruleInline: {
           user: [
-            { required: true, message: 'Please fill in the user name', trigger: 'blur' }
+            { required: true, message: '账号不能为空！', trigger: 'blur' }
           ],
           password: [
-            { required: true, message: 'Please fill in the password.', trigger: 'blur' },
-            { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
+            { required: true, message: '密码不能为空！', trigger: 'blur' },
           ]
         }
 
       }
     },
     methods: {
-      handleSubmit(name) {
-        this.$refs[name].validate((valid) => {
+      handleSubmit() {
+
+        this.$refs["formInline"].validate((valid) => {
           if (valid) {
-            this.$Message.success('Success!');
+            this.$ajax({
+              method:"post",
+              url: "http://localhost:9080/legenddisk/user/register",
+              data: {
+                record: JSON.stringify(this.formInline)
+
+              }
+
+            }).then(resp => {  //响应结果
+              console.log(resp.data);
+              if(resp.data.flag){
+                this.$Message.success(resp.data.msg);
+                this.$router.push("/Index");
+              }else{
+                this.$Message.error(resp.data.msg);
+              }
+
+            }).catch(err => {
+              console.log('请求失败：'+err.status+','+err.statusText);
+            });
+            // this.$Message.success('Success!');
           } else {
-            this.$Message.error('Fail!');
+            this.$Message.error('账号或密码格式不正确！');
           }
-        })
+        });
+
+      },
+      login(){
+        this.$ajax({
+          method:"post",
+          url: "http://localhost:9080/legenddisk/user/login",
+          data: {
+            username: this.username,
+            password: this.password
+          }
+
+        }).then(resp => {  //响应结果
+          console.log(resp.data);
+          if(resp.data.flag){
+            this.$Message.success(resp.data.msg);
+            this.$router.push("/Index");
+          }else{
+            this.$Message.error(resp.data.msg);
+          }
+
+        }).catch(err => {
+          console.log('请求失败：'+err.status+','+err.statusText);
+        });
       }
     }
   }
