@@ -122,6 +122,29 @@
             this.$Message.error(resp.data.msg);
           }
 
+          }).catch(err => {
+            console.log('请求失败：'+err.status+','+err.statusText);
+          });
+      },
+      register(){
+        this.$ajax({
+          method:"post",
+          url: "http://localhost:9080/legenddisk/user/register",
+          data: {
+            username: this.username,
+            password: this.password
+          }
+
+        }).then(resp => {  //响应结果
+          console.log(resp.data);
+          if(resp.data.addflag){
+            this.$Message.success("注册成功！");
+            this.$router.push("/Login");
+          }else{
+            this.$Message.success("系统错误，注册失败！");
+
+          }
+
         }).catch(err => {
           console.log('请求失败：'+err.status+','+err.statusText);
         });

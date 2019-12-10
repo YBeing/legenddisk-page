@@ -34,15 +34,15 @@
       <div>
         <Table   ref="selection" :columns="columns4" :data="data1">
           <template slot-scope="{ row, index }" slot="rightclickmenu"  >
-            <Dropdown trigger="contextMenu" style="margin-left: 20px">
-              <a>
+<!--            <Dropdown trigger="contextMenu" style="margin-left: 20px">-->
+              <a @dblclick="openModel(index)">
                 {{row.name}}
 <!--                <Icon type="ios-arrow-down"></Icon>-->
               </a>
-              <DropdownMenu slot="list">
-                <DropdownItem style="color: blue"  ><a @click="openModel(index)">重命名</a></DropdownItem>
-                <DropdownItem style="color: #ed4014">下载</DropdownItem>
-              </DropdownMenu>
+<!--              <DropdownMenu slot="list">-->
+<!--                <DropdownItem style="color: blue"  ><a @click="openModel(index)">重命名</a></DropdownItem>-->
+<!--                <DropdownItem style="color: #ed4014">下载</DropdownItem>-->
+<!--              </DropdownMenu>-->
             </Dropdown>
           </template>
           <template slot-scope="{ row, index }" slot="action"  >
