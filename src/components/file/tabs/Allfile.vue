@@ -22,8 +22,9 @@
   <Row>
     <Col span="8">
       <Breadcrumb>
-        <BreadcrumbItem to="/">Home</BreadcrumbItem>
-        <BreadcrumbItem to="/components/breadcrumb">Components</BreadcrumbItem>
+<!--        <BreadcrumbItem ><a @click="test2">Home</a></BreadcrumbItem>-->
+        <BreadcrumbItem to="/Index">Home</BreadcrumbItem>
+        <BreadcrumbItem to="/">Components</BreadcrumbItem>
         <BreadcrumbItem>Breadcrumb</BreadcrumbItem>
       </Breadcrumb>
     </Col>
@@ -80,11 +81,13 @@
         name: "Allfile",
         data () {
           return {
-            // showflag:true,
-            // showflag2:false,
+            /*当前所选文件的下标*/
             currIndex:0,
             renamefileDir:false,
             filename:"",
+            oldfilename:"",
+            /*当前所在目录层级*/
+            currentLevelIndex:1,
             columns4: [
               {
                 type: 'selection',
@@ -131,6 +134,11 @@
             ]
           }
         },
+        //页面加载之前读取第一层级的目录
+        mounted() {
+          this.getLevelOneDirList();
+
+        },
         methods: {
           handleSelectAll (status) {
             this.$refs.selection.selectAll(status);
@@ -143,7 +151,10 @@
                age: 30,
                address: '新文件夹',
                date: '2019-12-06'
-             })
+             });
+             this.filename="新文件夹";
+            this.makedirJava();
+
           },
           show (index) {
             this.$Modal.info({
@@ -155,18 +166,64 @@
             this.data1.splice(index, 1);
           },
           renamefile(){
-            // alert(this.filename);
-            // alert(this.currIndex);
-            this.renamefileDir=false;
 
+            this.renamefileDir=false;
+            this.oldfilename=this.data1[this.currIndex].name;
             this.data1[this.currIndex].name=this.filename;
+            this.renameJavaDir();
           },
           openModel(index){
             this.renamefileDir=true;
             this.currIndex=index;
 
 
+          },
+          makedirJava(){
+            this.$ajax({
+              method:"post",
+              url: "http://localhost:9080/legenddisk/file/makeDir",
+              data: {
+                directory: this.filename,
+                index: this.currentLevelIndex,
+              }
+
+            }).then(resp => {  //响应结果
+
+            }).catch(err => {
+              console.log('请求失败：'+err.status+','+err.statusText);
+            });
+          },
+          renameJavaDir(){
+            this.$ajax({
+              method:"post",
+              url: "http://localhost:9080/legenddisk/file/renameFileDir",
+              data: {
+                oldDirectory: this.oldfilename,
+                newDirectory: this.filename,
+              }
+
+            }).then(resp => {  //响应结果
+
+            }).catch(err => {
+              console.log('请求失败：'+err.status+','+err.statusText);
+            });
+          },
+          getLevelOneDirList(){
+            this.$ajax({
+              method:"post",
+              url: "http://localhost:9080/legenddisk/file/renameFileDir",
+              data: {
+                oldDirectory: this.oldfilename,
+                newDirectory: this.filename,
+              }
+
+            }).then(resp => {  //响应结果
+
+            }).catch(err => {
+              console.log('请求失败：'+err.status+','+err.statusText);
+            });
           }
+
 
 
         }

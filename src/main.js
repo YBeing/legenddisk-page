@@ -6,7 +6,7 @@ import axios from 'axios'
 import 'view-design/dist/styles/iview.css';
 
 Vue.config.productionTip = false;
-// axios.defaults.withCredentials=true;
+axios.defaults.withCredentials=true;
 Vue.prototype.$ajax=axios;
 Vue.use(ViewUI);
 

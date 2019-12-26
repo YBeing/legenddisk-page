@@ -72,6 +72,7 @@
 
       }
     },
+
     methods: {
       handleSubmit() {
 
@@ -111,9 +112,11 @@
           data: {
             username: this.username,
             password: this.password
-          }
+          },
 
-        }).then(resp => {  //响应结果
+
+
+      }).then(resp => {  //响应结果
           console.log(resp.data);
           if(resp.data.flag){
             this.$Message.success(resp.data.msg);
