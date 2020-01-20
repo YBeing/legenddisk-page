@@ -126,7 +126,9 @@
           }
 
           }).catch(err => {
-            console.log('请求失败：'+err.status+','+err.statusText);
+          this.$Message.error('请求失败：请检查网络环境');
+
+          // console.log('请求失败：'+err.status+','+err.statusText);
           });
       },
       register(){
@@ -149,7 +151,8 @@
           }
 
         }).catch(err => {
-          console.log('请求失败：'+err.status+','+err.statusText);
+          this.$Message.error('请求失败：'+err.status+','+err.statusText);
+          // console.log('请求失败：'+err.status+','+err.statusText);
         });
       }
     }
